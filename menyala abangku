@@ -1,0 +1,38 @@
+# https://tea.xyz/what-is-this-file
+---
+version: 1.0.0
+codeOwners:
+  - '0xf81B98b6300bA1bB93c4dC1Fe3e688c80Cc204f6'
+quorum: 1
+package main
+
+import (
+    "fmt"
+    "os"
+
+    pewpew "github.com/bengadbois/pewpew/lib"
+)
+
+func main() {
+    stressCfg := pewpew.StressConfig{
+        Count:       1,
+        Concurrency: 1,
+        Verbose:     false,
+        Targets: []pewpew.Target{{
+            URL: "https://127.0.0.1:443/home",
+            Options: pewpew.TargetOptions{
+                Timeout: "2s",
+                Method:  "GET",
+                Body:    `{"field": "data", "work": true}`,
+            },
+        }},
+    }
+
+    output := os.Stdout
+    stats, err := pewpew.RunStress(stressCfg, output)
+    if err != nil {
+        fmt.Printf("pewpew stress failed:  %s", err.Error())
+    }
+
+    fmt.Printf("%+v", stats)
+}
